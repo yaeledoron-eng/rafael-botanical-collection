@@ -107,7 +107,7 @@ window.close();}
 yes.onclick=cont;no.onclick=quit;y2.onclick=cont;n2.onclick=quit;
 ['click','keydown','change','mousemove'].forEach(e=>document.addEventListener(e,()=>{if(modal.style.display!=='flex')reset()}));
 /* ===== טבלת נתונים (בסגנון איירטייבל) ===== */
-const AIRTABLE_SHARE_URL=''; /* להדביק כאן קישור שיתוף של תצוגה באיירטייבל (https://airtable.com/shr...) */
+const AIRTABLE_SHARE_URL='https://airtable.com/appqubtYUiKoQHb1n/shrj47yNPbjuhy8sL'; /* להדביק כאן קישור שיתוף של תצוגה באיירטייבל (https://airtable.com/shr...) */
 const COLS=[[0,'שם הצמח'],[1,'משפחה'],[2,'שם לועזי','l'],[3,'משפחה לועזית','l'],[4,'מקום'],[5,'שנה'],[6,'תיאור','d']];
 let sortC=0,sortD=1;
 const tm=document.getElementById('tmodal'),tq=document.getElementById('tq'),tfam=document.getElementById('tfam'),tgrp=document.getElementById('tgrp'),tbody=document.getElementById('tbody');
@@ -130,7 +130,7 @@ tblBtn.onclick=openT;tclose.onclick=closeT;tq.oninput=drawT;tfam.onchange=drawT;
 tm.addEventListener('click',e=>{if(e.target===tm)closeT()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeT()});
 if(AIRTABLE_SHARE_URL){ttabs.classList.remove('hidden');
-const emb=AIRTABLE_SHARE_URL.replace('airtable.com/shr','airtable.com/embed/shr');
+const emb=AIRTABLE_SHARE_URL.replace(/airtable\.com\/(?!embed\/)/,'airtable.com/embed/');
 const showT=a=>{twrap.style.display=a?'none':'block';airf.style.display=a?'block':'none';thead.style.display=a?'none':'flex';tcount.style.display=a?'none':'block';tabL.className=a?'':'on';tabA.className=a?'on':'';if(a&&!airf.src)airf.src=emb};
 tabL.onclick=()=>showT(false);tabA.onclick=()=>showT(true)}
 reset();
