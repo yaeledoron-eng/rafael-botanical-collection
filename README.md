@@ -18,4 +18,7 @@
 ## GitHub Pages
 האתר מוגש מהענף `main` (root). הכתובת: https://yaeledoron-eng.github.io/rafael-botanical-collection/
 
+## טבלת נתונים
+הכפתור "📋 טבלת נתונים" בדשבורד פותח טבלה בסגנון Airtable (חיפוש, מיון, סינון וקיבוץ). לחיבור תצוגה חיה מ-Airtable מדביקים קישור שיתוף ל-`AIRTABLE_SHARE_URL` ב-`index.html`.
+
 מפרט מלא: [SPEC.md](SPEC.md)
