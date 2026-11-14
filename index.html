@@ -155,17 +155,19 @@ tabL.onclick=()=>showT(false);tabA.onclick=()=>showT(true)}
 const AIRTABLE_FORM_URL=''; /* קישור לטופס Airtable להוספת צמח (https://airtable.com/shr...) */
 const nm=document.getElementById('nmodal'),nqi=document.getElementById('nq'),nres=document.getElementById('nres'),ndet=document.getElementById('ndet');
 const API='https://api.inaturalist.org/v1/taxa';
+const jf=async u=>{for(let k=0;k<3;k++){try{const r=await fetch(u);if(r.ok)return await r.json()}catch(e){}await new Promise(r=>setTimeout(r,1200*(k+1)))}throw 0};
 const cleanLat=s=>String(s).split(/[&\/]/)[0].replace(/\s+/g,' ').trim();
 function openN(name){nm.style.display='flex';nqi.value=name?cleanLat(name):'';ndet.innerHTML='';nres.innerHTML='';if(nqi.value)nSearch(nqi.value);else nqi.focus()}
 function closeN(){nm.style.display='none'}
 async function nSearch(q){q=q.trim();if(!q)return;nres.innerHTML='<div class="empty">מחפש…</div>';ndet.innerHTML='';
-try{const j=await (await fetch(API+'?q='+encodeURIComponent(q)+'&per_page=6&locale=he&is_active=true')).json();const rs=j.results||[];
+try{const get=async s=>(await jf(API+'?q='+encodeURIComponent(s)+'&per_page=6&locale=he&is_active=true&taxon_id=47126'+(/\s/.test(s)?'':'&rank=genus'))).results||[];let rs=await get(q);if(!rs.length&&/\s/.test(q))rs=await get(q.split(' ')[0]);const ql=q.toLowerCase();rs.sort((x,y)=>(y.name.toLowerCase()===ql)-(x.name.toLowerCase()===ql)||(y.name.toLowerCase().startsWith(ql))-(x.name.toLowerCase().startsWith(ql)));
 if(!rs.length){nres.innerHTML='<div class="empty">לא נמצאו תוצאות ב-iNaturalist</div>';return}
 nres.innerHTML=rs.map((t,i)=>`<button class="chipb" data-i="${i}">${esc(t.name)}${t.preferred_common_name?' · '+esc(t.preferred_common_name):''}</button>`).join('');
-nres.querySelectorAll('button').forEach(b=>b.onclick=()=>nShow(rs[b.dataset.i].id));nShow(rs[0].id)}
+nres.querySelectorAll('button').forEach(b=>b.onclick=()=>nShow(rs[b.dataset.i].id));let ok=0;for(const t of rs.slice(0,3)){if(ok=await nShow(t.id))break}
+if(!ok&&!nSearch.sub){const w=(rs[0].name||'').split(' ');if(w.length>2){nSearch.sub=1;await nSearch(w.slice(0,2).join(' '));nSearch.sub=0}}}
 catch(e){nres.innerHTML='<div class="empty">אין חיבור ל-iNaturalist כרגע. נסו שוב מאוחר יותר.</div>'}}
 async function nShow(id){ndet.innerHTML='<div class="empty">טוען…</div>';
-try{const t=((await (await fetch(API+'/'+id+'?locale=he')).json()).results||[])[0];if(!t)throw 0;
+try{const t=((await jf(API+'/'+id+'?locale=he')).results||[])[0];if(!t)throw 0;
 const fam=(t.ancestors||[]).find(a=>a.rank==='family');
 const ph=(t.taxon_photos||[]).map(x=>x.photo).filter(p=>p&&p.license_code&&p.medium_url).slice(0,6);
 const url='https://www.inaturalist.org/taxa/'+t.id;
@@ -173,9 +175,9 @@ ndet.innerHTML=`<div id="ntitle">${esc(t.preferred_common_name||'ללא שם נ�
 <div class="pgrid">${ph.map(p=>`<figure><a href="https://www.inaturalist.org/photos/${p.id}" target="_blank" rel="noopener"><img src="${esc(p.medium_url)}" alt="" loading="lazy"></a><figcaption>${esc(p.attribution||'')}</figcaption></figure>`).join('')||'<div class="empty">אין תמונות מורשות להצגה</div>'}</div>
 <a class="nb" href="${url}" target="_blank" rel="noopener">עוד מידע ב-iNaturalist ↗</a>${AIRTABLE_FORM_URL?'<button class="nb" id="naddb">➕ הוסף לטבלה</button>':''}`;
 const ab=document.getElementById('naddb');
-if(ab)ab.onclick=()=>{const pf=(k,v)=>v?'&prefill_'+encodeURIComponent(k)+'='+encodeURIComponent(v):'';
-window.open(AIRTABLE_FORM_URL+'?'+(pf('שם הצמח',t.preferred_common_name)+pf('שם לועזי',t.name)+pf('משפחה לועזית',fam&&fam.name)).slice(1),'_blank','noopener')}}
-catch(e){ndet.innerHTML='<div class="empty">אין חיבור ל-iNaturalist כרגע. נסו שוב מאוחר יותר.</div>'}}
+window.__np=ph.length;if(ab)ab.onclick=()=>{const pf=(k,v)=>v?'&prefill_'+encodeURIComponent(k)+'='+encodeURIComponent(v):'';
+window.open(AIRTABLE_FORM_URL+'?'+(pf('שם הצמח',t.preferred_common_name)+pf('שם לועזי',t.name)+pf('משפחה לועזית',fam&&fam.name)).slice(1),'_blank','noopener')};return ph.length}
+catch(e){ndet.innerHTML='<div class="empty">אין חיבור ל-iNaturalist כרגע. נסו שוב מאוחר יותר.</div>';return 0}}
 natBtn.onclick=()=>openN('');nclose.onclick=closeN;ngo.onclick=()=>nSearch(nqi.value);
 nqi.addEventListener('keydown',e=>{if(e.key==='Enter')nSearch(nqi.value)});
 nm.addEventListener('click',e=>{if(e.target===nm)closeN()});
