@@ -75,7 +75,7 @@ button:hover{filter:brightness(1.07)}
 <div class="sub">אוסף זה נעשה על ידי רפאל דורון בתחילה כתחביב והפך לחלק מהמשימות לתואר ראשון במדעי הטבע.</div>
 <div id="main">
 <div class="card"><label for="sel">בחרו צמח מהרשימה:</label><select id="sel"></select>
-<button class="tb" id="tblBtn">📋 טבלת נתונים</button> <button class="tb" id="natBtn" style="background:#6fa57c">🌍 חיפוש בטבע (iNaturalist)</button></div>
+<button class="tb" id="tblBtn">📋 טבלת נתונים</button> <a class="tb" id="natBtn" href="https://www.inaturalist.org/taxa/search" target="_blank" rel="noopener" style="background:#6fa57c;color:#fff;text-decoration:none;display:inline-block;border-radius:24px;padding:10px 30px">🌍 חיפוש חופשי ב-iNaturalist ↗</a></div>
 <div class="card" id="pic"><div class="empty">תמונת הצמח היבש תוצג כאן 📷</div></div>
 <div class="card" id="info"><div class="empty">בחרו צמח כדי לראות את פרטיו 🌿</div></div>
 <div class="card" id="cont"><div class="q">להמשיך?</div>
@@ -152,7 +152,6 @@ const emb=AIRTABLE_SHARE_URL.replace(/airtable\.com\/(?!embed\/)/,'airtable.com/
 const showT=a=>{twrap.style.display=a?'none':'block';airf.style.display=a?'block':'none';thead.style.display=a?'none':'flex';tcount.style.display=a?'none':'block';tabL.className=a?'':'on';tabA.className=a?'on':'';if(a&&!airf.src)airf.src=emb};
 tabL.onclick=()=>showT(false);tabA.onclick=()=>showT(true)}
 /* ===== חלון "בטבע" – iNaturalist (קריאה פתוחה, ללא מפתח) ===== */
-const AIRTABLE_FORM_URL=''; /* קישור לטופס Airtable להוספת צמח (https://airtable.com/shr...) */
 const nm=document.getElementById('nmodal'),nqi=document.getElementById('nq'),nres=document.getElementById('nres'),ndet=document.getElementById('ndet');
 const API='https://api.inaturalist.org/v1/taxa';
 const jf=async u=>{for(let k=0;k<3;k++){try{const r=await fetch(u);if(r.ok)return await r.json()}catch(e){}await new Promise(r=>setTimeout(r,1200*(k+1)))}throw 0};
@@ -173,12 +172,10 @@ const ph=(t.taxon_photos||[]).map(x=>x.photo).filter(p=>p&&p.license_code&&p.med
 const url='https://www.inaturalist.org/taxa/'+t.id;
 ndet.innerHTML=`<div id="ntitle">${esc(t.preferred_common_name||'ללא שם נפוץ')}</div><div id="nlat">${esc(t.name)}${fam?' · '+esc(fam.name):''}</div>
 <div class="pgrid">${ph.map(p=>`<figure><a href="https://www.inaturalist.org/photos/${p.id}" target="_blank" rel="noopener"><img src="${esc(p.medium_url)}" alt="" loading="lazy"></a><figcaption>${esc(p.attribution||'')}</figcaption></figure>`).join('')||'<div class="empty">אין תמונות מורשות להצגה</div>'}</div>
-<a class="nb" href="${url}" target="_blank" rel="noopener">עוד מידע ב-iNaturalist ↗</a>${AIRTABLE_FORM_URL?'<button class="nb" id="naddb">➕ הוסף לטבלה</button>':''}`;
-const ab=document.getElementById('naddb');
-window.__np=ph.length;if(ab)ab.onclick=()=>{const pf=(k,v)=>v?'&prefill_'+encodeURIComponent(k)+'='+encodeURIComponent(v):'';
-window.open(AIRTABLE_FORM_URL+'?'+(pf('שם הצמח',t.preferred_common_name)+pf('שם לועזי',t.name)+pf('משפחה לועזית',fam&&fam.name)).slice(1),'_blank','noopener')};return ph.length}
+<a class="nb" href="${url}" target="_blank" rel="noopener">עוד מידע ב-iNaturalist ↗</a>`;
+return ph.length}
 catch(e){ndet.innerHTML='<div class="empty">אין חיבור ל-iNaturalist כרגע. נסו שוב מאוחר יותר.</div>';return 0}}
-natBtn.onclick=()=>openN('');nclose.onclick=closeN;ngo.onclick=()=>nSearch(nqi.value);
+nclose.onclick=closeN;ngo.onclick=()=>nSearch(nqi.value);
 nqi.addEventListener('keydown',e=>{if(e.key==='Enter')nSearch(nqi.value)});
 nm.addEventListener('click',e=>{if(e.target===nm)closeN()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeN()});
