@@ -21,7 +21,26 @@ select:focus{outline:none;border-color:#7fb08a}
 .chip b{display:block;font-size:.75rem;color:#7a9a78;font-weight:600}
 .chip span{font-size:1rem}
 .desc{line-height:1.9;font-size:1.05rem;background:#fbf8ee;border-radius:12px;padding:14px 18px;border-right:5px solid #a8cf9a}
-#pic{text-align:center}#pic img{max-width:100%;max-height:460px;border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.2);cursor:zoom-in}#pic .cap{font-size:.8rem;color:#7a9a78;margin-top:8px}.empty{text-align:center;color:#7a9a78;padding:20px}
+#pic{text-align:center}#pic img{max-width:100%;max-height:460px;border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.2);cursor:zoom-in}#pic .cap{font-size:.8rem;color:#7a9a78;margin-top:8px}.tb{margin-top:12px;background:#7d9ec9}
+#tmodal{position:fixed;inset:0;background:rgba(60,80,60,.45);display:none;align-items:center;justify-content:center;z-index:4;padding:14px}
+#tbox{background:#fbfdf8;border-radius:18px;width:100%;max-width:1100px;height:92vh;display:flex;flex-direction:column;box-shadow:0 10px 40px rgba(0,0,0,.3);overflow:hidden}
+#thead{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 18px;background:#eef6e6;border-bottom:1px solid #d5e5cb}
+#thead h3{margin:0;color:#3f6b4a;font-size:1.2rem;flex:1 1 auto}
+#thead input,#thead select{padding:8px 12px;border:2px solid #b9d3b4;border-radius:10px;font-family:inherit;font-size:.95rem;width:auto}
+#thead label{display:flex;align-items:center;gap:6px;margin:0;font-weight:500;font-size:.9rem}
+.xb{background:#c79a8a;padding:7px 16px;border-radius:10px}
+.tabs{display:flex;gap:6px;padding:8px 18px 0}.tabs button{background:#dfe9d6;color:#4a634d;border-radius:10px 10px 0 0;padding:7px 18px}.tabs button.on{background:#6fa57c;color:#fff}
+#twrap{flex:1;overflow:auto}#airf{flex:1;border:0;width:100%;display:none}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th{position:sticky;top:0;background:#e3eed9;color:#3f6b4a;text-align:right;padding:10px 12px;cursor:pointer;white-space:nowrap;border-bottom:2px solid #c3d9b5;user-select:none}
+td{padding:9px 12px;border-bottom:1px solid #e6eee0;vertical-align:top}
+tbody tr.r{cursor:pointer}tbody tr.r:hover{background:#f1f8ea}
+td.d{max-width:420px;color:#5d6e5c;font-size:.88rem}
+td.l{direction:ltr;text-align:right;font-style:italic;color:#7a8f6a}
+tr.g td{background:#d7e8c4;font-weight:700;color:#3f6b4a}
+.pill{background:#e8f1de;border-radius:20px;padding:2px 10px;display:inline-block}
+#tcount{padding:8px 18px;font-size:.85rem;color:#7a9a78;border-top:1px solid #e3eed9}
+.empty{text-align:center;color:#7a9a78;padding:20px}
 .btns{display:flex;gap:12px;justify-content:center;margin-top:18px}
 button{font-family:inherit;font-size:1rem;padding:10px 30px;border:0;border-radius:24px;cursor:pointer;color:#fff;background:#6fa57c}
 button.no{background:#c79a8a}
@@ -40,7 +59,8 @@ button:hover{filter:brightness(1.07)}
 <h1>האוסף הבוטני של רפאל</h1>
 <div class="sub">אוסף זה נעשה על ידי רפאל דורון בתחילה כתחביב והפך לחלק מהמשימות לתואר ראשון במדעי הטבע.</div>
 <div id="main">
-<div class="card"><label for="sel">בחרו צמח מהרשימה:</label><select id="sel"></select></div>
+<div class="card"><label for="sel">בחרו צמח מהרשימה:</label><select id="sel"></select>
+<button class="tb" id="tblBtn">📋 טבלת נתונים</button></div>
 <div class="card" id="pic"><div class="empty">תמונת הצמח היבש תוצג כאן 📷</div></div>
 <div class="card" id="info"><div class="empty">בחרו צמח כדי לראות את פרטיו 🌿</div></div>
 <div class="card" id="cont"><div class="q">להמשיך?</div>
@@ -48,6 +68,14 @@ button:hover{filter:brightness(1.07)}
 </div>
 <div id="bye" class="card"><h2>תודה שביקרתם באוסף! 🌿</h2><p>ניתן לסגור את החלון.</p></div>
 </div>
+<div id="tmodal"><div id="tbox">
+<div id="thead"><h3>טבלת נתונים – האוסף הבוטני</h3>
+<input id="tq" type="search" placeholder="חיפוש בכל העמודות…"><select id="tfam"></select>
+<label><input type="checkbox" id="tgrp"> קבץ לפי משפחה</label><button class="xb" id="tclose">סגירה ✕</button></div>
+<div class="tabs hidden" id="ttabs"><button class="on" id="tabL">טבלה</button><button id="tabA">Airtable חי</button></div>
+<div id="twrap"><table><thead><tr id="thr"></tr></thead><tbody id="tbody"></tbody></table></div>
+<iframe id="airf" title="Airtable"></iframe>
+<div id="tcount"></div></div></div>
 <div id="modal"><div class="card"><div class="q">עדיין כאן? להמשיך?</div>
 <p id="cd" style="color:#7a9a78">הדשבורד ייסגר בעוד 60 שניות</p>
 <div class="btns"><button id="y2">כן, להמשיך</button><button class="no" id="n2">לא, יציאה</button></div></div></div>
@@ -78,5 +106,32 @@ document.getElementById('main').classList.add('hidden');document.getElementById(
 window.close();}
 yes.onclick=cont;no.onclick=quit;y2.onclick=cont;n2.onclick=quit;
 ['click','keydown','change','mousemove'].forEach(e=>document.addEventListener(e,()=>{if(modal.style.display!=='flex')reset()}));
+/* ===== טבלת נתונים (בסגנון איירטייבל) ===== */
+const AIRTABLE_SHARE_URL=''; /* להדביק כאן קישור שיתוף של תצוגה באיירטייבל (https://airtable.com/shr...) */
+const COLS=[[0,'שם הצמח'],[1,'משפחה'],[2,'שם לועזי','l'],[3,'משפחה לועזית','l'],[4,'מקום'],[5,'שנה'],[6,'תיאור','d']];
+let sortC=0,sortD=1;
+const tm=document.getElementById('tmodal'),tq=document.getElementById('tq'),tfam=document.getElementById('tfam'),tgrp=document.getElementById('tgrp'),tbody=document.getElementById('tbody');
+tfam.innerHTML='<option value="">כל המשפחות</option>'+[...new Set(DATA.map(p=>p[1]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'he')).map(f=>`<option>${esc(f)}</option>`).join('');
+function drawHead(){document.getElementById('thr').innerHTML=COLS.map(c=>`<th data-c="${c[0]}">${c[1]}${sortC===c[0]?(sortD>0?' ▲':' ▼'):''}</th>`).join('');
+document.querySelectorAll('#thr th').forEach(th=>th.onclick=()=>{const c=+th.dataset.c;if(sortC===c)sortD=-sortD;else{sortC=c;sortD=1}drawT()})}
+function drawT(){drawHead();const q=tq.value.trim().toLowerCase(),fm=tfam.value;
+let rows=DATA.map((p,i)=>({p,i})).filter(({p})=>(!fm||p[1]===fm)&&(!q||p.join(' ').toLowerCase().includes(q)));
+const cmp=(a,b)=>{const x=a.p[sortC],y=b.p[sortC];return(sortC===5?(+x||0)-(+y||0):String(x).localeCompare(String(y),'he'))*sortD};
+if(tgrp.checked)rows.sort((a,b)=>String(a.p[1]).localeCompare(String(b.p[1]),'he')||cmp(a,b));else rows.sort(cmp);
+let out='',last=null;
+rows.forEach(({p,i})=>{if(tgrp.checked&&p[1]!==last){last=p[1];out+=`<tr class="g"><td colspan="7">${esc(p[1]||'ללא משפחה')} (${rows.filter(r=>r.p[1]===p[1]).length})</td></tr>`}
+out+=`<tr class="r" data-i="${i}">`+COLS.map(c=>{const v=esc(p[c[0]]);return `<td class="${c[2]||''}">${c[0]===1&&v?`<span class="pill">${v}</span>`:v}</td>`}).join('')+'</tr>'});
+tbody.innerHTML=out||'<tr><td colspan="7" class="empty">לא נמצאו תוצאות</td></tr>';
+document.getElementById('tcount').textContent=`מוצגים ${rows.length} מתוך ${DATA.length} צמחים · לחיצה על שורה פותחת את הצמח בדשבורד`;
+tbody.querySelectorAll('tr.r').forEach(tr=>tr.onclick=()=>{sel.value=tr.dataset.i;sel.onchange();closeT();window.scrollTo({top:0,behavior:'smooth'})})}
+function openT(){tm.style.display='flex';drawT();tq.focus()}
+function closeT(){tm.style.display='none'}
+tblBtn.onclick=openT;tclose.onclick=closeT;tq.oninput=drawT;tfam.onchange=drawT;tgrp.onchange=drawT;
+tm.addEventListener('click',e=>{if(e.target===tm)closeT()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeT()});
+if(AIRTABLE_SHARE_URL){ttabs.classList.remove('hidden');
+const emb=AIRTABLE_SHARE_URL.replace('airtable.com/shr','airtable.com/embed/shr');
+const showT=a=>{twrap.style.display=a?'none':'block';airf.style.display=a?'block':'none';thead.style.display=a?'none':'flex';tcount.style.display=a?'none':'block';tabL.className=a?'':'on';tabA.className=a?'on':'';if(a&&!airf.src)airf.src=emb};
+tabL.onclick=()=>showT(false);tabA.onclick=()=>showT(true)}
 reset();
 </script></body></html>
